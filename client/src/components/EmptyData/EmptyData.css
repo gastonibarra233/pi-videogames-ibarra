@@ -1,0 +1,9 @@
+.empty-data{
+    width: 100%;
+	text-align: center;
+}
+
+.empty-data img{
+	width: 400px;
+	border-radius: 5px;
+}

@@ -1,0 +1,17 @@
+.container a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.container a img {
+  width: 70px;
+}
+
+.container a span {
+  font-family: "Lobster", serif;
+  font-size: 36px;
+  padding-left: 10px;
+  color: #474747;
+}

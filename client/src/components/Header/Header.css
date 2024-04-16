@@ -1,0 +1,75 @@
+.container {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 80px;
+}
+
+.container button {
+  border: none;
+  margin: 4px;
+  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: grey;
+}
+
+.container button.active {
+  color: inherit;
+}
+
+.container button span {
+  margin-left: 2px;
+}
+
+.radio-input {
+  font-family: "Epilogue";
+  position: relative;
+  padding: 3px 0px 0px 42px;
+  display: inline;
+}
+
+.radio-input input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  visibility: hidden;
+  position: absolute;
+  right: 0;
+}
+
+.radio-input input:checked + i:before{
+	transform: scale(1);
+    opacity: 1;
+}
+
+.radio-input input + i{
+	background: #f0f0f0;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    left: 15px;
+}
+
+.radio-input input + i:before{
+	content: "";
+      display: inline;
+      height: 16px;
+      width: 16px;
+      border-radius: 100%;
+      position: absolute;
+      z-index: 1;
+      top: 2px;
+      left: 2px;
+      background: #2ac176;
+      transition: all 0.25s ease;
+      transform: scale(0);
+      opacity: 0;
+}
