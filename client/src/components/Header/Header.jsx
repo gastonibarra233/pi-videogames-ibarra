@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
     const dispatch = useDispatch();
-    const { source, order, searchName } = useSelector((state) => state.games);
-
+  const { source, order, searchName } = useSelector((state) => state.games);
+  
   const handleOrder = ({ currentTarget }) => {
     const newOrder = {};
     newOrder[currentTarget.name] = currentTarget.value;
@@ -51,6 +51,7 @@ const Header = () => {
             value="API"
             checked={source === "API"}
             onChange={() => handleSourceFilter("API")}
+            onClick={() => handleSourceFilter("API")}
           />
           API
           <i></i>
@@ -62,6 +63,7 @@ const Header = () => {
             value="DB"
             checked={source === "DB"}
             onChange={() => handleSourceFilter("DB")}
+            onClick={() => handleSourceFilter("DB")}
           />
           DataBase
           <i></i>
@@ -73,8 +75,9 @@ const Header = () => {
           name="ALPHABETIC"
           className={order.ALPHABETIC ? "active" : ""}
           value={order["ALPHABETIC"] === "ASC" ? "DESC" : "ASC"}
-          onClick={handleOrder}
+          onClick={handleOrder}          
         >
+          
           <Sort order={order["ALPHABETIC"]} />
           <span>Alphabetic</span>
         </button>

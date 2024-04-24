@@ -19,12 +19,11 @@ module.exports = (sequelize) => {
     },
     platforms: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     image: {
       type: DataTypes.STRING,
       allowNull: false,
-      isUrl: true
     },
     releaseDate: {
       type: DataTypes.STRING

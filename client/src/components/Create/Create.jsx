@@ -1,228 +1,367 @@
-import { useState } from 'react'
-import NavBar from '../NavBar/NavBar'
-import axios from 'axios'
-import './Create.css'
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  postNewGame,
+  setStatus,
+  fetchAllPlatforms,
+} from "../../redux/gameSlice";
+import { fetchAllGenres } from "../../redux/genreSlice";
 
-const Create = (props) => {
+import "./Create.css";
 
-    const [errors, setErrors] = useState({ from: 'Must complete the form' });
+import NavBar from "../NavBar/NavBar";
+import { Clock, Camera, CheckOK } from "../SvgIcons/SvgIcons";
+import validate from "../../validate";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import placeholderImage from "../../images/placeholder-joystick.png";
 
-    const [form, setForm] = useState({
-        name: '',
-        description: '',
-        releaseDate: '',
-        rating: 0,
-        genres: [],
-        platforms: []
-    });
+const Create = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  //state
+  const initialState = {
+    name: "",
+    description: "",
+    releaseDate: "",
+    image: "",
+    rating: 0,
+    genres: [],
+    platforms: [],
+  };
+  const [field, setField] = useState(initialState);
+  const [error, setError] = useState({});
+  console.log(initialState)
+  
+  let status = useSelector((state) => state.games.status);
 
-    const handleChange = event => {
-        if (event.target.parentNode.parentNode.id === 'genres') {
-            if (event.target.checked) {
-                setForm(prevState => ({
-                    ...prevState,
-                    genres: form.genres.concat(event.target.value)
-                }))
-            } else {
-                setForm(prevState => ({
-                    ...prevState,
-                    genres: form.genres.filter(x => event.target.value !== x)
-                }))
-            }
-        }
-        if (event.target.parentNode.parentNode.id === 'platforms') {
-            if (event.target.checked) {
-                setForm(prevState => ({
-                    ...prevState,
-                    platforms: form.platforms.concat(event.target.name)
-                }))
-            } else {
-                setForm(prevState => ({
-                    ...prevState,
-                    platforms: form.platforms.filter(x => event.target.name !== x)
-                }))
-            }
-        }
-        if (event.target.type !== 'checkbox') {
-            setForm(prevState => ({
-                ...prevState,
-                [event.target.name]: event.target.value
-            }))
-        }
-        setErrors(validate({
-            ...form,
-            [event.target.name]: event.target.value
-        }))
+  //genres
+  useEffect(() => {
+    if (status) {
+      //show and clean error
+      setTimeout(() => {
+        dispatch(setStatus(""));
+      }, 4000);
     }
-    const validate = form => {
-        let errors = {};
-        if (!form.name) {
-            errors.name = 'Game Name is required!';
-        } else if (form.name.length < 4) {
-            errors.name = 'Game Name must have at least 4 characters';
-        }
-        if (!form.description) {
-            errors.description = 'Description is required';
-        } else if (form.description.length < 8) {
-            errors.description='Description must have at least 8 characters'
-        }
-        if (!form.rating) {
-            errors.rating = 'Rating is required';
-        } else if (!/^[1-5]$/.test(form.rating)) {
-            errors.rating = 'Rating must be between 1 and 5';
-        }
-        return errors;
-    }
+    dispatch(fetchAllGenres());
+  }, [dispatch, status]);
 
-    const handleSubmit = event => {
-        event.prevenDefault()
-        validate(form);
-        let checkboxsErrors = []
-        if (form.genres.length < 1) checkboxsErrors.push('Genres is required');
-        if (form.platforms.length < 1) checkboxsErrors.push('Platforms is required');
-        //Object.values --> retorno un array con los values
-        if (Object.values(errors).length || checkboxsErrors.length) {
-            return alert(Object.values(errors).concat(checkboxsErrors).join('\n'));
-        }
-        axios.post('https://video-games-pi-henry-api.vercel.app//videogame', form)
-            .then(res => console.log(res.data));
-        alert(`${form.name} Created Successfully`)
-        props.history.push('/videogames')
+  //platforms
+  useEffect(() => {
+    if (status) {
+      setTimeout(() => {
+        dispatch(setStatus(""));
+      }, 4000);
     }
+    dispatch(fetchAllPlatforms());
+  }, [dispatch, status]);
+
+  const genres = useSelector((state) => state.genres.list);
+  const platforms = useSelector((state) => state.games.platforms);
+  const options = genres
+    ? genres.map((g) => {
+        return { label: g.name, value: g.name };
+      })
+    : [];
+
+  //handle genres behaviour
+  const handleSelectChange = ({ target }) => {
+    if (target.value !== "0") {
+      if (!field.genres.includes(target.value)) {
+        if (field.genres.length < 6) {
+          setField((state) => ({
+            ...state,
+            genres: [...state.genres, target.value],
+          }));
+        } else {
+          setError((error) => ({
+            ...error,
+            genre: "Only 6 genres allowed!",
+          }));
+        }
+      }
+    }
+  };
+
+  const handleDelGenre = (name) => {
+    setField((state) => ({
+      ...state,
+      genres: state.genres.filter((g) => g !== name),
+    }));
+    setError((prevError) => ({
+      ...prevError,
+      genre: "",
+    }));
+  };
+
+  const handleChangePlatforms = ({ target }) => {
+    if (target.value !== "0") {
+      if (!field.platforms.includes(target.value)) {
+        if (
+          field.platforms.length < 3 ||
+          field.platforms.includes(target.value)
+        ) {
+          setField((state) => ({
+            ...state,
+            platforms: [...state.platforms, target.value],
+          }));
+        } else {
+          setError((error) => ({
+            ...error,
+            platform: "Only 3 platforms allowed!",
+          }));
+        }
+      }
+    }
+  };
+
+  const handleDelPlatform = (name) => {
+    setField((state) => ({
+      ...state,
+      platforms: state.platforms.filter((p) => p !== name),
+    }));
+    setError((error) => ({
+      ...error,
+      platform: "",
+    }));
+  };
+
+  const platformsOptions = platforms
+    ? platforms.map((p) => {
+        return { label: p.name, value: p.name };
+      })
+      : [];
+      
+      //change image
+      const [imageUrl, setImageUrl] = useState(placeholderImage);
+    
+      const handleChange = (e) => {
+        setImageUrl(e.target.value);
+      };
+    
+      const handleImageChange = () => {
+        setField((state) => ({
+          ...state,
+          image: imageUrl,
+        }));
+      };
+  //handle errors
+  const handleBlur = () => {
+    setError(validate(field));
+  };
+
+  //submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const valid = validate(field);
+    if (Object.values(valid).every((err) => !err)) {
+      dispatch(postNewGame(field))
+        .then((response) => {
+          if (response.payload && response.payload.id) {
+            setTimeout(() => {
+              dispatch(setStatus(""));
+              navigate(`/videogames/add/${response.payload.id}`);
+            }, 2000);
+          } else {
+            console.error("Invalid response from server:", response);
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setError({ general: "An error occurred while saving the game." });
+        });
+    } else {
+      setError(valid);
+    }
+  };
 
   return (
-      <div>
-          <NavBar />
-          <div className='main-add'>
-              <div className='container-add'>
-                  <h2>Create Game - details -</h2>
-                  <div className='div-cont'>
-                      <form onSubmit={handleSubmit} onChange={handleChange}>
-                          <label htmlFor="name" className='title-name'><strong>Name: </strong></label>
-                          <br />
-                          <input className='name' placeholder='Name' type="text" id='name' name='name' autoComplete='off' />
-                          <br />
-                          <label htmlFor="description" className='title-name'><strong>Description: </strong></label>
-                          <br />
-                          <textarea className='name' name="description" placeholder='Description...' id="description" cols="30" rows="3"></textarea>
-                          <br />
-                        <label htmlFor="date" className="title-name"><strong>Release Date: </strong></label>
-                        <br />
-                        <input name='releaseDate' className="dt" type="date" id="date" required />
-                        <br />
-                        <label htmlFor="rating" className="title-name"><strong>Rating: </strong></label>
-                        <br />
-                        <input name='rating' className="dt" placeholder='Rate from 1 to 5' type="tel" id="rating" maxLength='1' autoComplete="off"/>
-                        <br />
-                        <label className="title-name"><strong>Genres:</strong></label>
-                        <div id='genres' className="genres-div">
-                            <div className="Action">
-                                <input name='Action' value='2' type="checkbox" id="Action" />
-                                <label htmlFor="Action">Action.</label>
-                            </div>
-                            <div className="indie">
-                                <input name='Indie' value='1' type="checkbox" id="Indie" />
-                                <label htmlFor="Indie">Indie.</label>
-                            </div>
-                            <div className="Adventure">
-                                <input name='Adventure' value='3' type="checkbox" id="Adventure" />
-                                <label htmlFor="Adventure">Adventure.</label>
-                            </div>
-                            <div>
-                                <input name='RPG' value='4' type="checkbox" id="RPG" />
-                                <label htmlFor="RPG">RPG.</label>
-                            </div>
-                            <div>
-                                <input name='Strategy' value='5' type="checkbox" id="Strategy" />
-                                <label htmlFor="Strategy">Strategy.</label>
-                            </div>
-                            <div>
-                                <input name='Shooter' value='6' type="checkbox" id="Shooter" />
-                                <label htmlFor="Shooter">Shooter.</label>
-                            </div>
-                            <div>
-                                <input name='Casual' value='7' type="checkbox" id="Casual" />
-                                <label htmlFor="Casual">Casual.</label>
-                            </div>
-                            <div>
-                                <input name='Simulation' value='8' type="checkbox" id="Simulation" />
-                                <label htmlFor="Simulation">Simulation.</label>
-                            </div>
-                            <div>
-                                <input name='Puzzle' value='9' type="checkbox" id="Puzzle" />
-                                <label htmlFor="Puzzle">Puzzle.</label>
-                            </div>
-                            <div>
-                                <input name='Arcade' value='10' type="checkbox" id="Arcade" />
-                                <label htmlFor="Arcade">Arcade.</label>
-                            </div>
-                            <div>
-                                <input name='Platformer' value='11' type="checkbox" id="Platformer" />
-                                <label htmlFor="Platformer">Platformer.</label>
-                            </div>
-                            <div>
-                                <input name='Racing' value='12' type="checkbox" id="Racing" />
-                                <label htmlFor="Racing">Racing.</label>
-                            </div>
-                            <div>
-                                <input name='Massively-Multiplayer' value='13' type="checkbox" id="Massively-Multiplayer" />
-                                <label htmlFor="Massively-Multiplayer">Massively-Multiplayer.</label>
-                            </div>
-                            <div>
-                                <input name='Sports' value='14' type="checkbox" id="Sports" />
-                                <label htmlFor="Sports">Sports.</label>
-                            </div>
-                            <div>
-                                <input name='Fighting' value='15' type="checkbox" id="Fighting" />
-                                <label htmlFor="Fighting">Fighting.</label>
-                            </div>
-                        </div>
-                        <label className="title-name"><strong>Platforms: </strong> </label>
-                        <div id='platforms' className="plat-div">
-                            <div>
-                                <input name='PC' type="checkbox" id="PC" />
-                                <label htmlFor="PC">PC.</label>
-                            </div>
-                            <div>
-                                <input name='iOS' type="checkbox" id="iOS" />
-                                <label htmlFor="iOS">iOS.</label>
-                            </div>
-                            <div>
-                                <input name='Android' type="checkbox" id="Android" />
-                                <label htmlFor="Android">Android.</label>
-                            </div>
-                            <div>
-                                <input name='macOS' type="checkbox" id="macOS" />
-                                <label htmlFor="macOS">macOS.</label>
-                            </div>
-                            <div>
-                                <input name='PlayStation 4' type="checkbox" id="PlayStation 4" />
-                                <label htmlFor="PlayStation 4">PlayStation 4.</label>
-                            </div>
-                            <div>
-                                <input name='PlayStation 5' type="checkbox" id="PlayStation 5" />
-                                <label htmlFor="PlayStation 5">PlayStation 5.</label>
-                            </div>
-                            <div>
-                                <input name='XBOX' type="checkbox" id="XBOX" />
-                                <label htmlFor="XBOX">XBOX.</label>
-                            </div>
-                            <div>
-                                <input name='PS Vita' type="checkbox" id="PS Vita" />
-                                <label htmlFor="PS Vita">PS Vita.</label>
-                            </div>
-                        </div>
-                        <br />
-                        <div className="div-but-form">
-                        <button type='submit'>Create</button>
-                        </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      
-    </div>
-  )
-}
+    <div>
+      <NavBar search={false} />
 
-export default Create
+      <div className="create">
+        <div className="card-img">
+          <img src={imageUrl} alt="Load..." />
+        </div>
+        <div className="input">
+          <input
+            type="text"
+            value={imageUrl}
+            onChange={handleChange}
+            placeholder="Paste image URL here..."
+          />
+          <button onClick={handleImageChange}>Change image</button>
+        </div>
+
+        <div className="card-info">
+          <div className="card-text">
+            <h1>Create your videogame!</h1>
+            <form onSubmit={handleSubmit} noValidate>
+              {status && status !== "OK" ? <ErrorMessage msg={status} /> : ""}
+              <div className="input">
+                <input
+                  type="text"
+                  value={field.name}
+                  name="name"
+                  className="input-field"
+                  required
+                  onBlur={handleBlur}
+                  onChange={(e) => setField({ ...field, name: e.target.value })}
+                />
+                <label className="input-label">Name</label>
+                <label className="input-error">
+                  {error.name && error.name}
+                </label>
+              </div>
+              <div className="input">
+                <input
+                  type="text"
+                  value={field.description}
+                  name="description"
+                  required
+                  className="input-field"
+                  onBlur={handleBlur}
+                  onChange={(e) =>
+                    setField({ ...field, description: e.target.value })
+                  }
+                />
+                <label className="input-label">Description</label>
+                <label className="input-error">
+                  {error.description && error.description}
+                </label>
+              </div>
+
+              <div className="input">
+                <input
+                  type="text"
+                  placeholder="YYYY-MM-DD"
+                  value={field.releaseDate}
+                  name="releaseDate"
+                  required
+                  className="input-field"
+                  onBlur={handleBlur}
+                  onChange={(e) =>
+                    setField({ ...field, releaseDate: e.target.value })
+                  }
+                />
+                <label className="input-error">
+                  {error.releaseDate && error.releaseDate}
+                </label>
+              </div>
+              <div className="input">
+                <input
+                  type="text"
+                  value={field.rating}
+                  name="rating"
+                  required
+                  className="input-field"
+                  onBlur={handleBlur}
+                  onChange={(e) =>
+                    setField({ ...field, rating: e.target.value })
+                  }
+                />
+                <label className="input-label">Rating</label>
+                <label className="input-error">
+                  {error.rating && error.rating}
+                </label>
+              </div>
+
+              <div className="input">
+                <div className="input-select">
+                  <select name="selectGenre" onChange={handleSelectChange}>
+                    <option key="0" value="0">
+                      Select genres...
+                    </option>
+                    {options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="input-error-select">
+                    {error.genre && error.genre}
+                  </label>
+                </div>
+                <div>
+                  {!field.genres.length
+                    ? null
+                    : field.genres.map((g) => (
+                        <span className="genre-tag" key={g}>
+                          {g}
+                          <span
+                            className="remove"
+                            onClick={() => handleDelGenre(g)}>
+                            x
+                          </span>
+                        </span>
+                      ))}
+                </div>
+              </div>
+
+              <div className="input">
+                <div className="input-select">
+                  <select
+                    name="selectPlatform"
+                    onChange={handleChangePlatforms}>
+                    <option key="0" value="0">
+                      Select platforms...
+                    </option>
+                    {platformsOptions.map((platform) => (
+                      <option key={platform.value} value={platform.value}>
+                        {platform.label}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="input-error-select">
+                    {error.platform && error.platform}
+                  </label>
+                </div>
+                <div>
+                  {!field.platforms.length
+                    ? null
+                    : field.platforms.map((p) => (
+                        <span className="genre-tag" key={p}>
+                          {p}
+                          <span
+                            className="remove"
+                            onClick={() => handleDelPlatform(p)}>
+                            x
+                          </span>
+                        </span>
+                      ))}
+                </div>
+              </div>
+
+              <div className="card-btn">
+                <button
+                  className="cancel"
+                  type="button"
+                  onClick={() => navigate("/videogames")}>
+                  {status === "OK" ? "Return" : "Cancel"}
+                </button>
+                <button
+                  className={
+                    status === "OK" ? "success" : status !== "" ? "error" : ""
+                  }
+                  disabled={status === "OK"}
+                  type="submit">
+                  {status === "" ? (
+                    "Save"
+                  ) : status === "OK" ? (
+                    <CheckOK />
+                  ) : (
+                    "Error!"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Create;

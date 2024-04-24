@@ -14,7 +14,8 @@
   border-radius: 30px 0 0 30px;
   width: 14em;
   transition: all ease-in-out 0.5s;
-  margin-right: -2rem;  
+  margin-right: -2rem;
+	flex-grow: 1;
 }
 
 .search-bar .search-input:hover,
@@ -36,6 +37,13 @@
   cursor: pointer;
 }
 
+.search-icon {
+  height: 1.3em;
+  width: 1.3em;
+  fill: #b4b4b4;
+  vertical-align: middle;
+}
+
 .search-bar .search-button .search-icon{
   height: 1.3em;
 	width: 1.3em;
@@ -46,7 +54,7 @@
   position: relative;
 	float: left;
 	min-width: 200px;
-	margin: 8px;
+	margin: 100px;
 }
 
 .search-bar .search-select:after{

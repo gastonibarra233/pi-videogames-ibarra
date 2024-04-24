@@ -4,26 +4,29 @@
   flex-direction: row;
   align-items: center;
   height: 100px;
-  justify-content: space-between;
-  overflow: hidden;
   background-color: #fff;
-  padding: 0 50px;
+  padding: 0 5%;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
   font-size: 16px;
 }
 
+.nav-links {
+  flex-grow: 1;
+}
+
 .nav-link {
   position: relative;
-  display: block;
+  display: flex;
   text-decoration: none;
   transition: 0.5s;
   color: #555;
+  padding: 0 15px;
 }
 
 .nav-link::after {
   position: absolute;
   content: "";
-  top: 100%;
+  bottom: 0;
   left: 0;
   width: 100%;
   height: 3px;

@@ -22,14 +22,14 @@ const genreSlice = createSlice({
 });
 
 export const fetchAllGenres = () => {
-    return async (dispatch) => {
-        try {
-          const { data } = await axios.get(`${URL_GENRES}`)
-            dispatch(setAllGenres(data))
-        } catch (error) {
-            console.error("getBySource:", error.message)
-        }
+  return async (dispatch) => {
+    try {
+      const { data } = await axios.get(`${URL_GENRES}`)
+      dispatch(setAllGenres(data))
+    } catch (error) {
+      console.error("getBySource:", error.message)
     }
+  }
 }
 
 export const { setAllGenres, clearGenres } = genreSlice.actions

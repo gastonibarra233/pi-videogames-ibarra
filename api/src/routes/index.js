@@ -1,14 +1,10 @@
-require("dotenv").config();
 const { Router } = require("express");
 const router = Router();
 
-const videogames = require('./getVideogames');
-const videogame = require('./getPostVgame');
-const genres = require('./getGenre');
-// const deleteDb = require('./deleteVgame')
+const routerVgames = require('./vgames')
+const routerGenres = require('./genres')
 
-router.use('/videogames', videogames);
-router.use('/videogame', videogame);
-router.use('/genres', genres);
+router.use('/videogames', routerVgames)
+router.use('/genres', routerGenres)
 
 module.exports = router;

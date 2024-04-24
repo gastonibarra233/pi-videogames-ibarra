@@ -18,14 +18,13 @@ const Detail = () => {
   const navigate = useNavigate()
 
   const { detail: game, loading, status } = useSelector((state) => state.games)
-
+  
   useEffect(() => {
     dispatch(searchById(idVideogame))
     return () => {
       dispatch(clearDetail())
     }
   }, [dispatch, idVideogame])
-  
   return (
     <div>
       <NavBar search={false} />

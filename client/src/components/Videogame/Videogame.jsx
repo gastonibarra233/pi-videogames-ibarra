@@ -1,7 +1,7 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import photo from '../../images/created.jpg'
-import './Videogame.css'
+import React from "react";
+import { Link } from "react-router-dom";
+import photo from "../../images/created.jpg";
+import "./Videogame.css";
 
 const Videogame = (props) => {
   return (
@@ -9,7 +9,11 @@ const Videogame = (props) => {
       <div className="title-game">{props.name}</div>
       <div className="game-div">
         {props.background_image ? (
-          <img src={`${props.background_image}`} alt="Videogame" className="Img" />
+          <img
+            src={`${props.background_image}`}
+            alt="Videogame"
+            className="Img"
+          />
         ) : (
           <img src={photo} alt="Videogame" className="Img" />
         )}
@@ -21,27 +25,25 @@ const Videogame = (props) => {
           </p>
         }
       </div>
-          <div className="infoContGenres">
-              {
-                  <p className=''>
-                      <strong>Genres:</strong>{' '}
-                      {`${
-                          typeof props.genres === 'string'
-                          ? props.genres
-                          : props.genres.join(', ')
-                      }`}
-                  </p>
-              }
+      <div className="infoContGenres">
+        {
+          <p className="">
+            <strong>Genres:</strong>{" "}
+            {Array.isArray(props.genres)
+              ? props.genres.join(", ")
+              : props.genres}
+          </p>
+        }
       </div>
-          <div className="div-button">
-              {props.id && (
-                  <Link to={`/videogame/${props.id}`}>
-                      <button className='Link'>Details</button>
-                  </Link>
-              )}
+      <div className="div-button">
+        {props.id && (
+          <Link to={`/videogame/${props.id}`}>
+            <button className="Link">Details</button>
+          </Link>
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default Videogame
+export default Videogame;

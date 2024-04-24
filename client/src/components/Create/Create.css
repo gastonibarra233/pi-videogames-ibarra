@@ -1,92 +1,241 @@
-.main-add {
-    display: flex;
-    justify-content: center;
-    background: #fff url('../../img/crear.jpg') center center/cover no-repeat;
-
+.create {
+  display: flex;
+  width: 100%;
+  margin: 40px auto;
+  border-radius: 5px;
+  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
 }
 
-.container-add {
-
-    text-align: center;
-    margin: 40px;
-    padding: 20px;
-    width: 800px;
-    height: 650px;
+.card-img {
+  width: 50%;
+  display: flex;
+  height: 480px;
+  position: relative;
 }
 
-.container-add h2 {
-    
-    text-align: center;
-    font-family: 'Press Start 2P';
-    font-size: xx-large;
-    color:black
+.card-img img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  border-radius: 5px 0 0 5px;
 }
 
-.div-cont {
-    display: flex;
-    justify-content: center;
+.card-img .loadbtn {
+  width: 120px;
+  height: 55px;
+  margin: 4px;
+  padding: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.15);
 }
 
-.genres-div {
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid black;
-    width:650px;
-    border-radius: 10px;
-    background-color: rgb(241, 154, 22);
+.card-img .loadbtn span {
+  display: block;
+  font-size: 12px;
 }
 
-.plat-div {
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid black;
-    width:650px;
-    border-radius: 10px;
-    background-color: rgb(241, 154, 22);
+.card-info {
+  height: 440px;
+  width: 50%;
+  padding: 20px 40px;
+  border-radius: 0 5px 0px 5px;
+  background-color: #fff;
 }
 
-.container-add label {
-    font-size: large;
-    margin: 3px;
+.card-info .card-text {
+  min-height: 280px;
+  width: 100%;
 }
 
-.name{
-    height: 25px;
-    width: 400px;
-    border-radius: 30px;
+.card-info .card-text h1 {
+  font-family: "Lobster", serif;
+  font-size: 34px;
+  color: #474747;
+  margin: 8px 0;
 }
 
-.dt {
-    height: 25px;
-    width: 120px;
-    border-radius: 30px;
+.card-info form {
+  color: #555;
+  font-family: "Raleway", sans-serif;
+  position: relative;
 }
 
-.div-but-form {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
+.card-info form .card-btn {
+  width: 100%;
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
 }
 
-.div-but-form button {
-    font-family: 'Press Start 2P';
-    padding: 10px;
-    margin: 20px;
-    border-radius: 20px;
-    background-color: chartreuse;
+.card-info form .card-btn button {
+  height: 40px;
+  width: 176px;
+  box-sizing: border-box;
+  border: transparent;
+  font-family: "Raleway", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+  background-color: #6dc264;
+  cursor: pointer;
+  outline: none;
+  transition: all 400ms ease-in-out;
 }
 
-.div-but-form button:hover {
-    background-color: black;
-    color: #fff;
+.card-info form .card-btn button:hover {
+  background-color: #a6d4a0;
 }
 
-.container-add input {
-    background-color: rgb(241, 154, 22);
+.card-info form .card-btn button:disabled {
+  pointer-events: none;
 }
 
-.container-add textarea {
-    background-color: rgb(241, 154, 22);
+.card-info form .card-btn button.cancel {
+  background-color: #aaa;
+}
+
+.card-info form .card-btn button.cancel:hover {
+  background-color: #ccc;
+}
+
+.card-info form .card-btn button.error {
+  background-color: red;
+}
+
+.card-info form .card-btn button.success {
+  width: 80px;
+  transform: rotate(360deg);
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-top: 10px;
+  margin-top: 5px;
+  width: 100%;
+  float: none;
+  height: inherit;
+}
+
+.input-label {
+  color: #8597a3;
+  font-size: 14px;
+  position: absolute;
+  top: 16px;
+  transition: all 0.3s;
+}
+
+.input-error {
+  color: rgba(255, 69, 0, 0.8);
+  font-size: 11px;
+  position: absolute;
+  top: 0;
+  right: 10px;
+}
+
+.input-error .select {
+  right: 40px;
+}
+
+.label-measure {
+  font-size: 14px;
+  color: #8597a3;
+  position: absolute;
+  top: 20px;
+  right: -50px;
+}
+
+.input-field {
+  border: 0;
+  padding: 0;
+  z-index: 1;
+  background-color: transparent;
+  border-bottom: 2px solid #eee;
+  font: inherit;
+  font-size: 14px;
+  line-height: 26px;
+  padding-left: 5px;
+}
+
+.input-field:focus,
+.input-field:valid {
+  outline: 0;
+  border-bottom-color: #665856;
+}
+
+.input-field:focus + .input-label,
+.input-field:valid + .input-label {
+  color: #666;
+  font-size: 12px;
+  transform: translateY(-18px);
+}
+
+.input-select {
+  position: relative;
+  min-width: 200px;
+  margin-bottom: 5px;
+}
+
+.input-select:after {
+  content: ">";
+  font: 24px "Consolas", monospace;
+  color: #888;
+  transform: rotate(90deg);
+  right: 14px;
+  top: 4px;
+  padding: 0 0 2px;
+  position: absolute;
+  pointer-events: none;
+}
+
+.input-select select {
+  appearance: none;
+  outline: none;
+  scroll-behavior: smooth;
+  display: block;
+  width: 100%;
+  height: 38px;
+  padding: 0px 10px;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #888;
+  background-color: #e3e3e3;
+  background-image: none;
+  border: none;
+  word-break: normal;
+}
+
+.genre-tag {
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 5px 15px;
+  margin: 3px 5px;
+  background-color: powderblue;
+  display: inline-block;
+  position: relative;
+}
+
+.genre-tag .remove {
+  position: absolute;
+  cursor: pointer;
+  top: -4px;
+  right: -4px;
+  font-size: 9px;
+  background-color: #777;
+  padding: 3px 5px;
+  margin: 2px 0px;
+  color: white;
+  border-radius: 100%;
 }

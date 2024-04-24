@@ -1,6 +1,8 @@
+
+
 .myButton{
       position: absolute;
-      left:45%;
+      left:25%;
       top:20%;
       animation: myAnim 1s ease 0s infinite normal forwards;
  }
@@ -15,6 +17,13 @@
     background: linear-gradient(90deg,chartreuse 10%, #fff 100%);
 }
 
+.MyImage img{
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+}
  @keyframes myAnim {
     0% {
       animation-timing-function: ease-out;

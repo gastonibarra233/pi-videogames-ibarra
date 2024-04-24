@@ -25,13 +25,16 @@ const Videogames = () => {
   const countPerPage = 8;
   const firstIdx = (currentPage - 1) * countPerPage;
   const lastIdx = firstIdx + countPerPage;
-  const page = games.slice(firstIdx, lastIdx);
+  const gamesFlat = games.flat()
+  const listFlat = list.flat()
+
+  const page = gamesFlat.slice(firstIdx, lastIdx)
 
   useEffect(() => {
-    if (!list.length && !searchName) {
+    if (!listFlat.length && !searchName) {
       dispatch(fetchAllGames());
     }
-  }, [dispatch, list, searchName]);
+  }, [dispatch, listFlat, searchName]);
 
   const handlePageChange = (pageNumber) => {
     dispatch(setCurrentPage(pageNumber));
@@ -41,7 +44,7 @@ const Videogames = () => {
     <div className="container">
       {loading ? (
         <Loading />
-      ) : !games.length ? (
+      ) : !gamesFlat.length ? (
         status ? (
           status === "NOTFOUND" ? (
             <EmptyData />
@@ -59,7 +62,7 @@ const Videogames = () => {
 
           <Pagination
             handleChange={handlePageChange}
-            totalItems={games.length}
+            totalItems={gamesFlat.length}
             currentPage={currentPage}
             countPerPage={countPerPage}
             />
